@@ -12,22 +12,19 @@ export function Home() {
   const [prevValue, setPrevValue] = useState(0);
   const [resultOfLastOperation, setResultOfLastOperation] = useState(0);
   const [operationConcluded, setOperationConcluded] = useState(false);
+  const [error, setError] = useState(false);
 
   function handlePressPad(value: string) {
-    if (numberOnDisplay.length < 8 && !isNaN(+value)) {
+    if (numberOnDisplay.length < 8 && !isNaN(+value) && error === false) {
       if (!operationConcluded) {
-        if (numberOnDisplay.length === 0 && value !== '0') {
-          setNumberOnDisplay((prevState) => prevState + value);
-        } else {
-          setNumberOnDisplay((prevState) => prevState + value);
-        }
-      } else if (operationConcluded) {
+        setNumberOnDisplay((prevState) => prevState + value);
+      } else if (operationConcluded && error === false) {
         setNumberOnDisplay(value);
         setOperationConcluded(false);
       }
     } else {
       //Botão de operação apertado
-      if (value === '=' && action.length !== 0) {
+      if (value === '=' && action.length !== 0 && !error) {
         //Igualdade e ação armazenada
         if (resultOfLastOperation !== 0 && prevValue !== 0) {
           //o resultado da operação anterior e o último número inserido
@@ -46,7 +43,6 @@ export function Home() {
           setOperationConcluded(true);
         } else if (prevValue !== 0) {
           //o último número inserido
-
           let result = doMathOperation(prevValue, prevValue, action);
           setNumberOnDisplay(result.toString());
           setResultOfLastOperation(result);
@@ -67,6 +63,7 @@ export function Home() {
           setResultOfLastOperation(0);
           setOperationConcluded(false);
         }
+
       } else if(value === 'CE') {
         //Apagar tudo
         setNumberOnDisplay("");
@@ -74,6 +71,7 @@ export function Home() {
         setPrevValue(0);
         setResultOfLastOperation(0);
         setOperationConcluded(false);
+        setError(false);
       } else {
         if (action.length === 0) {
           let inputValueConverted = parseInt(numberOnDisplay);
@@ -82,8 +80,12 @@ export function Home() {
           setNumberOnDisplay("");
         }
       }
+
+      if (numberOnDisplay.length > 8) {
+        setNumberOnDisplay("ERR");
+        setError(true);
+      }
     }
-    
   }
 
   return(
