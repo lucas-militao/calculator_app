@@ -9,11 +9,11 @@ import {
 } from './styles';
 
 interface Props {
-  pressNumberPad: (value: string) => void;
+  pressPad: (value: string) => void;
 }
 
 export function NumberPad({
-  pressNumberPad
+  pressPad: pressNumberPad
 }: Props) {
 
   return(
