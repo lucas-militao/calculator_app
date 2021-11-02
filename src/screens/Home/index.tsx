@@ -38,7 +38,7 @@ export function Home() {
 
   function handleSignNumberButton() {
     //Mudar sinal do número no display
-    let numberOnDisplayConverted = parseInt(numberOnDisplay);
+    let numberOnDisplayConverted = parseFloat(numberOnDisplay);
     setNumberOnDisplay(numberOnDisplayConverted > 0
       ? (-Math.abs(numberOnDisplayConverted)).toString()
       : Math.abs(numberOnDisplayConverted).toString());
@@ -51,10 +51,36 @@ export function Home() {
   }
 
   function handleOperationButton(action: string) {
-    let inputValueConverted = parseInt(numberOnDisplay);
+    let inputValueConverted = parseFloat(numberOnDisplay);
     setAction(action);
     setPrevValue(inputValueConverted);
     setNumberOnDisplay("");
+  }
+
+  function handleEqualButton() {
+    let result = 0;
+    if (resultOfLastOperation !== 0 && prevValue !== 0) {
+      //o resultado da operação anterior e o último número inserido
+      result = doMathOperation(resultOfLastOperation, prevValue, action);
+      setResultOfLastOperation(result);
+    } else if (prevValue !== 0 && numberOnDisplay.length !== 0) {
+      //os dois últimos números inseridos
+      let inputValueConverted = parseFloat(numberOnDisplay);
+
+      result = doMathOperation(inputValueConverted, prevValue, action);
+      setResultOfLastOperation(result);
+    } else if (prevValue !== 0) {
+      //o último número inserido
+      result = doMathOperation(prevValue, prevValue, action);
+      setResultOfLastOperation(result);
+    }
+    
+    let resultConverted = isFloat(result) ? result.toFixed(3).toString() : result.toString();
+    setNumberOnDisplay(resultConverted.length < 8 ? resultConverted : 'ERR');
+  }
+
+  function isFloat(value: number) {
+    return (Number(value) === value && value % 1 !== 0);
   }
 
   function handlePressPad(value: string) {
@@ -67,29 +93,7 @@ export function Home() {
     } else {
       //O valor de entrada é uma operação
       if (value === '=' && action.length !== 0) {
-        //Igualdade e ação armazenada
-        let result = 0;
-        if (resultOfLastOperation !== 0 && prevValue !== 0) {
-          //o resultado da operação anterior e o último número inserido
-          result = doMathOperation(resultOfLastOperation, prevValue, action);
-          // setNumberOnDisplay(result.toString());
-          setResultOfLastOperation(result);
-        } else if (prevValue !== 0 && numberOnDisplay.length !== 0) {
-          //os dois últimos números inseridos
-          let inputValueConverted = parseInt(numberOnDisplay);
-          result = doMathOperation(inputValueConverted, prevValue, action);
-          // setNumberOnDisplay(result.toString());
-          setResultOfLastOperation(result);
-        } else if (prevValue !== 0) {
-          //o último número inserido
-          result = doMathOperation(prevValue, prevValue, action);
-          // setNumberOnDisplay(result.toString());
-          setResultOfLastOperation(result);
-        }
-
-        let resultConverted = result.toString();
-        setNumberOnDisplay(resultConverted.length < 8 ? resultConverted : 'ERR');
-        
+        handleEqualButton();
       } else if(value === 'C') {
         handleCButton();
       } else if(value === 'CE') {

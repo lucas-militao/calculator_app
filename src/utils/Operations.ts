@@ -18,11 +18,11 @@ function sum(value1: number, value2: number) {
 }
 
 function subtraction(value1: number, value2: number) {
-  return value1 - value2;
+  return value2 - value1;
 }
 
 function division(value1: number, value2: number) {
-  return value1 / value2;
+  return value2 / value1;
 }
 function multiplication(value1: number, value2: number) {
   return value1 * value2;
