@@ -74,6 +74,13 @@ export function Home() {
         setResultOfLastOperation(0);
         setOperationConcluded(false);
         setError(false);
+      } else if(value === '+/-') {
+        //Mudar sinal do número no display
+        let numberOnDisplayConverted = parseInt(numberOnDisplay);
+        setNumberOnDisplay(numberOnDisplayConverted > 0
+          ? (-Math.abs(numberOnDisplayConverted)).toString()
+          : Math.abs(numberOnDisplayConverted).toString());
+
       } else {
         if (action.length === 0) {
           let inputValueConverted = parseInt(numberOnDisplay);
@@ -88,7 +95,7 @@ export function Home() {
   return(
     <Container>
       <Display value={numberOnDisplay}/>
-      <NumberPad pressPad={handlePressPad}/>
+      <NumberPad pressNumberPad={handlePressPad}/>
     </Container>
   );
 }

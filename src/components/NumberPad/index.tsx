@@ -9,11 +9,11 @@ import {
 } from './styles';
 
 interface Props {
-  pressPad: (value: string) => void;
+  pressNumberPad: (value: string) => void;
 }
 
 export function NumberPad({
-  pressPad: pressNumberPad
+  pressNumberPad
 }: Props) {
 
   return(
@@ -21,7 +21,7 @@ export function NumberPad({
       <ButtonsLane>
         <PadButton value="C" pressDigit={pressNumberPad}/>
         <PadButton value="CE" pressDigit={pressNumberPad}/>
-        <PadButton value="%" pressDigit={pressNumberPad}/>
+        <PadButton value="+/-" pressDigit={pressNumberPad}/>
         <PadButton value="/" pressDigit={pressNumberPad}/>
       </ButtonsLane>
 
