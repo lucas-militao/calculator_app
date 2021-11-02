@@ -15,44 +15,46 @@ export function Home() {
   const [error, setError] = useState(false);
 
   function handlePressPad(value: string) {
-    if (numberOnDisplay.length < 8 && !isNaN(+value) && error === false) {
-      if (!operationConcluded) {
-        setNumberOnDisplay((prevState) => prevState + value);
-      } else if (operationConcluded && error === false) {
-        setNumberOnDisplay(value);
-        setOperationConcluded(false);
+    if (!isNaN(+value)) {
+      //O valor de entrada é um número
+      if (numberOnDisplay.length < 8 && !error) {
+        setNumberOnDisplay(lastInput => lastInput + value);
       }
     } else {
-      //Botão de operação apertado
+      //O valor de entrada é uma operação
       if (value === '=' && action.length !== 0 && !error) {
         //Igualdade e ação armazenada
+
+        let result = 0;
         if (resultOfLastOperation !== 0 && prevValue !== 0) {
           //o resultado da operação anterior e o último número inserido
           
-          let result = doMathOperation(resultOfLastOperation, prevValue, action);
-          setNumberOnDisplay(result.toString());
+          result = doMathOperation(resultOfLastOperation, prevValue, action);
+          // setNumberOnDisplay(result.toString());
           setResultOfLastOperation(result);
-          setOperationConcluded(true);
         } else if (prevValue !== 0 && numberOnDisplay.length !== 0) {
           //os dois últimos números inseridos
           
           let inputValueConverted = parseInt(numberOnDisplay);
-          let result = doMathOperation(inputValueConverted, prevValue, action);
-          setNumberOnDisplay(result.toString());
+          result = doMathOperation(inputValueConverted, prevValue, action);
+          // setNumberOnDisplay(result.toString());
           setResultOfLastOperation(result);
-          setOperationConcluded(true);
         } else if (prevValue !== 0) {
           //o último número inserido
-          let result = doMathOperation(prevValue, prevValue, action);
-          setNumberOnDisplay(result.toString());
+
+          result = doMathOperation(prevValue, prevValue, action);
+          // setNumberOnDisplay(result.toString());
           setResultOfLastOperation(result);
-          setOperationConcluded(true);
         }
+
+        let resultConverted = result.toString();
+        setNumberOnDisplay(resultConverted.length < 8 ? resultConverted : 'ERR');
+        
       } else if(value === 'C') {
         if (numberOnDisplay.length !== 0) {
           //Pagar display
           setNumberOnDisplay("");
-        } else if (action.length !== null) {
+        } else if (action.length !== 0) {
           //Apagar operação e pôr no display último número inserido
           setAction("");
           setNumberOnDisplay(prevValue.toString());
@@ -79,11 +81,6 @@ export function Home() {
           setPrevValue(inputValueConverted);
           setNumberOnDisplay("");
         }
-      }
-
-      if (numberOnDisplay.length > 8) {
-        setNumberOnDisplay("ERR");
-        setError(true);
       }
     }
   }
